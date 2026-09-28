@@ -1,0 +1,77 @@
+"""Food categories offered by Bella Forchetta."""
+enum Category { STARTERS PIZZA PASTA DESSERTS DRINKS }
+
+"""Lifecycle of a delivery order."""
+enum OrderStatus { CONFIRMED PREPARING OUT_FOR_DELIVERY DELIVERED }
+
+type MenuItem {
+  id: ID!
+  category: Category!
+  name: String!
+  description: String!
+  price: Float!
+  veg: Boolean!
+}
+
+type MenuResult {
+  count: Int!
+  items: [MenuItem!]!
+}
+
+type Customer {
+  name: String!
+  address: String!
+  phone: String!
+}
+
+type OrderLine {
+  id: ID!
+  name: String!
+  qty: Int!
+  price: Float!
+}
+
+type Order {
+  id: ID!
+  createdAt: String!
+  status: OrderStatus!
+  customer: Customer!
+  items: [OrderLine!]!
+  subtotal: Float!
+  deliveryFee: Float!
+  total: Float!
+  etaMinutes: Int!
+}
+
+type Health {
+  status: String!
+  service: String!
+  time: String!
+}
+
+input OrderItemInput {
+  id: ID!
+  qty: Int!
+}
+
+input CustomerInput {
+  name: String!
+  address: String!
+  phone: String!
+}
+
+input PlaceOrderInput {
+  items: [OrderItemInput!]!
+  customer: CustomerInput!
+}
+
+type Query {
+  health: Health!
+  menu(category: Category): MenuResult!
+  menuItem(id: ID!): MenuItem
+  order(id: ID!): Order
+}
+
+type Mutation {
+  placeOrder(input: PlaceOrderInput!): Order!
+}
