@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Validate SDL
+        run: npm run validate
+      - name: Test
+        run: npm test
+      - name: Upload schema artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: restaurant-schema-sdl
+          path: schema.graphql
